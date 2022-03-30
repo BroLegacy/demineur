@@ -1,97 +1,93 @@
 import random as rd # Importation de random pour les mine
 from colorama import Fore, Back, Style # Importation de colorama pour mettre des couleur sur les bombe et les chiffre
+import os
+
+correspondance_couleur = {0 : Fore.WHITE, 1 : Fore.GREEN, 2 : Fore.CYAN, 3 : Fore.BLUE, 4 : Fore.YELLOW, 5 : Fore.MAGENTA, 6 : Fore.RED, 7 : Fore.RED, 8 : Fore.RED}
+
+def creerGrille(N, M, v=0):
+    return [[v for j in range(M)] for i in range(N)]  # Fonction pour crée la grille
 
 
-def creerGrille(N, M, v=0): return [[v for j in range(M)] for i in range(N)] #Fonction pour crée la grille
-
-
-def placerMines(grille, N, M, X, l, c): #Fonction pour placer les mines aléatoirement
+def placerMines(grille, N, M, X, l, c):  # Fonction pour placer les mines aléatoirement
     cpt = 0
     while cpt != X:
-        ligne = rd.randint(0, N-1)
-        case = rd.randint(0, M-1)
+        ligne = rd.randint(0, N - 1)
+        case = rd.randint(0, M - 1)
         while (ligne == l and case == c) or grille[ligne][case] == 1 or (
-                ligne == l and case == c+1) or (ligne == l and case == c-1) or (ligne == l-1 and case == c-1) or (
-                ligne == l-1 and case == c) or (ligne == l-1 and case == c+1) or (ligne == l+1 and case == c-1) or (
-                ligne == l+1 and case == c) or (ligne == l+1 and case == c+1):
-            ligne = rd.randint(0, N-1)
-            case = rd.randint(0, M-1)
+                ligne == l and case == c + 1) or (ligne == l and case == c - 1) or (
+                ligne == l - 1 and case == c - 1) or (
+                ligne == l - 1 and case == c) or (ligne == l - 1 and case == c + 1) or (
+                ligne == l + 1 and case == c - 1) or (
+                ligne == l + 1 and case == c) or (ligne == l + 1 and case == c + 1):
+            ligne = rd.randint(0, N - 1)
+            case = rd.randint(0, M - 1)
         grille[ligne][case] = 1
         cpt += 1
 
+def clear_console():
+    os.system('clear')
 
-def afficheSolution(grille): #Fonction pour afficher la solution
+def afficheSolution(grille):  # Fonction pour afficher la solution
     print(Style.RESET_ALL, end='')
-    print(' '*3, end='')
+    print(' ' * 3, end='')
     for i in range(len(grille[0])):
-        sepa = ' '*(3-len(str(i+1)))
-        print(i+1, end=sepa)
+        sepa = ' ' * (3 - len(str(i + 1)))
+        print(i + 1, end=sepa)
     print('\n')
     for l in range(len(grille)):
-        sepa = ' '*(3-len(str(l+1)))
-        print(l+1, end=sepa)
+        sepa = ' ' * (3 - len(str(l + 1)))
+        print(l + 1, end=sepa)
         for c in range(len(grille[l])):
-            sepa2 = ' '*2
+            sepa2 = ' ' * 2
             if grille[l][c]:
-                print(Back.RED+'*', end='')
+                print(Back.RED + '*', end='')
                 print(Style.RESET_ALL, end=sepa2)
             else:
                 print('-', end=sepa2)
         print('')
 
 
-def testMine(grille, l, c): #Fonction qui permet de tester si une mine ce trouve sur cette case
+def testMine(grille, l, c):  # Fonction qui permet de tester si une mine ce trouve sur cette case
     if grille[l][c] == 1:
         return True
     else:
         return False
 
 
-def compteMinesVoisines(grille, l, c): #Fonction qui permet de compter le nombre de mine adjacente a la case choisi
+def compteMinesVoisines(grille, l,
+                        c):  # Fonction qui permet de compter le nombre de mine adjacente a la case choisi
     nbVoisines = 0
-    for i in range(l-1, l+2):
-        for j in range(c-1, c+2):
+    for i in range(l - 1, l + 2):
+        for j in range(c - 1, c + 2):
             if i >= 0 and i < len(grille) and j >= 0 and j < len(grille[l]):
                 nbVoisines += grille[i][j]
     return nbVoisines
 
 
-def afficheJeu(grille, casesD, drapeau): #Fonction qui permet d'afficher le jeu aprer chaque tour et qui contient le code de colorama
+def afficheJeu(grille, casesD,
+               drapeau):  # Fonction qui permet d'afficher le jeu aprer chaque tour et qui contient le code de colorama
+    clear_console()
     print(Style.RESET_ALL, end='')
-    print(' '*3, end='')
+    print(' ' * 3, end='')
     for i in range(len(grille[0])):
-        sepa = ' '*(3-len(str(i+1)))
-        print(i+1, end=sepa)
+        sepa = ' ' * (3 - len(str(i + 1)))
+        print(i + 1, end=sepa)
     print('\n')
     for l in range(len(grille)):
-        sepa = ' '*(3-len(str(l+1)))
-        print(l+1, end=sepa)
+        sepa = ' ' * (3 - len(str(l + 1)))
+        print(l + 1, end=sepa)
         for c in range(len(grille[l])):
-            sepa2 = ' '*2
+            sepa2 = ' ' * 2
             if casesD[l][c]:
                 if grille[l][c]:
-                    print(Back.RED+'*', end='')
+                    print(Back.RED + '*', end='')
                     print(Style.RESET_ALL, end=sepa2)
                 else:
                     val = compteMinesVoisines(grille, l, c)
-                    if val == 0:
-                        print(Fore.BLUE + str(val), end=sepa2)
-                    elif val == 1:
-                        print(Fore.CYAN + str(val), end=sepa2)
-                    elif val == 2:
-                        print(Fore.GREEN + str(val), end=sepa2)
-                    elif val == 3:
-                        print(Fore.YELLOW + str(val), end=sepa2)
-                    elif val == 4:
-                        print(Fore.RED + str(val), end=sepa2)
-                    elif val >= 5:
-                        print(Fore.MAGENTA + str(val), end=sepa2)
-                    elif val >= 6:
-                        print(Fore.MAGENTA + str(val), end=sepa2)
-                    elif val >= 7:
-                        print(Fore.MAGENTA + str(val), end=sepa2)
-                    elif val >= 8:
-                        print(Fore.MAGENTA + str(val), end=sepa2)
+                    if val != 0:
+                        print(correspondance_couleur.get(val) + str(val), end=sepa2)
+                    else:
+                        print(' ', end=sepa2)
                 print(Style.RESET_ALL, end='')
 
             elif drapeau[l][c]:
@@ -103,21 +99,21 @@ def afficheJeu(grille, casesD, drapeau): #Fonction qui permet d'afficher le jeu 
         print(Style.RESET_ALL)
 
 
-def getCoords(casesD, N, M): #Fonction qui permet de demander a l'utilisateur la case qu'il veux choisir
+def getCoords(casesD, N, M):  # Fonction qui permet de demander a l'utilisateur la case qu'il veux choisir
     print('À toi de jouer !')
     casePrise = True
     while casePrise:
         l = input("Choisissez une ligne ? ")
         while not l:
             l = input("Choisissez une ligne ?")
-        l = int(l)-1
+        l = int(l) - 1
         c = input('Choisissez une colonne ? ')
         while not c:
             c = input("Choisissez une colonne ?")
-        c = int(c)-1
-        while (not 0 <= l <= N-1):
+        c = int(c) - 1
+        while (not 0 <= l <= N - 1):
             l = int(input('0 ≤ ligne <', N, 'svp ? '))
-        while (not 0 <= c <= M-1):
+        while (not 0 <= c <= M - 1):
             c = int(input('0 ≤ colonne <', M, 'svp ? '))
         if casesD[l][c]:
             print('La case est déjà dévoilée, veuillez recommencez !')
@@ -126,7 +122,7 @@ def getCoords(casesD, N, M): #Fonction qui permet de demander a l'utilisateur la
     return l, c
 
 
-def victoire(grille, casesD, N, M): #Fonction qui permet de definir si le joueur a gagner ou non
+def victoire(grille, casesD, N, M):  # Fonction qui permet de definir si le joueur a gagner ou non
     for l in range(N):
         for c in range(M):
             if not grille[l][c] and not casesD[l][c]:
@@ -134,9 +130,9 @@ def victoire(grille, casesD, N, M): #Fonction qui permet de definir si le joueur
     return True
 
 
-def decouvreCase(grille, casesD, l, c, add, listeToDecouvre): #Fonction qui permet de découvrire la case
-    for i in range(l-1, l+2):
-        for j in range(c-1, c+2):
+def decouvreCase(grille, casesD, l, c, add, listeToDecouvre):  # Fonction qui permet de découvrire la case
+    for i in range(l - 1, l + 2):
+        for j in range(c - 1, c + 2):
             if i >= 0 and i < len(grille) and j >= 0 and j < len(grille[l]):
                 add.append([i, j])
                 if compteMinesVoisines(grille, i, j) == 0 and not grille[i][j]:
@@ -145,7 +141,8 @@ def decouvreCase(grille, casesD, l, c, add, listeToDecouvre): #Fonction qui perm
                 casesD[i][j] = True
 
 
-def decouvreCoter(grille, casesD, l, c): #Fonction qui permet de découvrire toute les case autour de la case séléctioner
+def decouvreCoter(grille, casesD, l,
+                  c):  # Fonction qui permet de découvrire toute les case autour de la case séléctioner
     add = []
     ligne = l
     case = c
@@ -167,7 +164,7 @@ def decouvreCoter(grille, casesD, l, c): #Fonction qui permet de découvrire tou
 # PROGRAMME PRINCIPAL
 # création du menu
 
-def jouer_jeux(): # fonction pour choisir si on veut jouer ou quitter et choisire les différents niveaux : Simple, Medium, Difficile et Personnalisé
+def jouer_jeux():  # fonction pour choisir si on veut jouer ou quitter et choisire les différents niveaux : Simple, Medium, Difficile et Personnalisé
     global N, M, X
     jouer = str(input("Veux tu jouer ou quitter ?\n"
                       "1:Jouer\n"
@@ -207,7 +204,7 @@ def jouer_jeux(): # fonction pour choisir si on veut jouer ou quitter et choisir
 
 
 jouer_jeux()
-grille = creerGrille(N, M) # Appele de la fonction pour créer la grille
+grille = creerGrille(N, M)  # Appele de la fonction pour créer la grille
 drapeau = creerGrille(N, M)
 
 # Premier coup
@@ -223,7 +220,6 @@ if compteMinesVoisines(grille, l, c) == 0:
 
 perdu = False
 gagne = victoire(grille, casesD, N, M)
-
 
 # Tour de jeu
 while not gagne and not perdu:
@@ -247,14 +243,11 @@ while not gagne and not perdu:
     else:
         print("Vous n'avez fais aucun choix !")
 
-
-
-if gagne: # Si toute les case sont découvert sauf les bombe alors il gagne au contraire il touche une mine et il peut rejouer ou quitter si il le shouaite
+if gagne:  # Si toute les case sont découvert sauf les bombe alors il gagne au contraire il touche une mine et il peut rejouer ou quitter si il le shouaite
     print('\nBravo, tu gagnes en', nbCoups, 'coups !\n')
     casesD = [[True for j in range(M)] for i in range(N)]
     afficheJeu(grille, casesD, drapeau)
     nom = input('Quel est ton nom ?\n')
-    jouer_jeux()
 
 else:
     print('\nPerdu, touché une mine !')
@@ -262,4 +255,5 @@ else:
     afficheJeu(grille, casesD, drapeau)
     print('\nLa solution était :')
     afficheSolution(grille)
-    jouer_jeux()
+
+jouer_jeux()
