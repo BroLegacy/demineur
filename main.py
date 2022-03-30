@@ -1,5 +1,5 @@
 import random as rd # Importation de random pour les mine
-from colorama import Fore, Back, Style # Importation de colorama pour mettre des couleur sur les bombe est les chiffre
+from colorama import Fore, Back, Style # Importation de colorama pour mettre des couleur sur les bombe et les chiffre
 
 
 def creerGrille(N, M, v=0): return [[v for j in range(M)] for i in range(N)] #Fonction pour crée la grille
@@ -86,6 +86,12 @@ def afficheJeu(grille, casesD, drapeau): #Fonction qui permet d'afficher le jeu 
                         print(Fore.RED + str(val), end=sepa2)
                     elif val >= 5:
                         print(Fore.MAGENTA + str(val), end=sepa2)
+                    elif val >= 6:
+                        print(Fore.MAGENTA + str(val), end=sepa2)
+                    elif val >= 7:
+                        print(Fore.MAGENTA + str(val), end=sepa2)
+                    elif val >= 8:
+                        print(Fore.MAGENTA + str(val), end=sepa2)
                 print(Style.RESET_ALL, end='')
 
             elif drapeau[l][c]:
@@ -101,20 +107,20 @@ def getCoords(casesD, N, M): #Fonction qui permet de demander a l'utilisateur la
     print('À toi de jouer !')
     casePrise = True
     while casePrise:
-        l = input("Ligne ? ")
+        l = input("Choisissez une ligne ? ")
         while not l:
-            l = input("Ligne ?")
+            l = input("Choisissez une ligne ?")
         l = int(l)-1
-        c = input('Colonne ? ')
+        c = input('Choisissez une colonne ? ')
         while not c:
-            c = input("Colonne ?")
+            c = input("Choisissez une colonne ?")
         c = int(c)-1
         while (not 0 <= l <= N-1):
             l = int(input('0 ≤ ligne <', N, 'svp ? '))
         while (not 0 <= c <= M-1):
             c = int(input('0 ≤ colonne <', M, 'svp ? '))
         if casesD[l][c]:
-            print('Case déjà dévoilée, recommencez')
+            print('La case est déjà dévoilée, veuillez recommencez !')
         else:
             casePrise = False
     return l, c
@@ -224,7 +230,7 @@ while not gagne and not perdu:
     print('\nCoup numéro', nbCoups)
     afficheJeu(grille, casesD, drapeau)
     drap = input(
-        'Placer un drapeau ?\n⏎ pour ignorer, 1 pour placer, 0 pour enlever un drapeau. : ')
+        'Placer un drapeau ?\n⏎ : Pour ignorer \n1 : Pour placer \n0 : Pour enlever un drapeau')
     l, c = getCoords(casesD, N, M)
     if drap == '':
         nbCoups += 1
