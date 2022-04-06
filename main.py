@@ -1,6 +1,8 @@
 import random as rd # Importation de random pour les mine
 from colorama import Fore, Back, Style # Importation de colorama pour mettre des couleur sur les bombe et les chiffre
 import os
+import interface
+
 
 correspondance_couleur = {0 : Fore.WHITE, 1 : Fore.GREEN, 2 : Fore.CYAN, 3 : Fore.BLUE, 4 : Fore.YELLOW, 5 : Fore.MAGENTA, 6 : Fore.RED, 7 : Fore.RED, 8 : Fore.RED}
 
@@ -54,7 +56,7 @@ def testMine(grille, l, c):  # Fonction qui permet de tester si une mine ce trou
         return False
 
 
-def compteMinesVoisines(grille, l,
+def MinesVoisines(grille, l,
                         c):  # Fonction qui permet de compter le nombre de mine adjacente a la case choisi
     nbVoisines = 0
     for i in range(l - 1, l + 2):
@@ -83,7 +85,7 @@ def afficheJeu(grille, casesD,
                     print(Back.RED + '*', end='')
                     print(Style.RESET_ALL, end=sepa2)
                 else:
-                    val = compteMinesVoisines(grille, l, c)
+                    val = MinesVoisines(grille, l, c)
                     if val != 0:
                         print(correspondance_couleur.get(val) + str(val), end=sepa2)
                     else:
@@ -135,7 +137,7 @@ def decouvreCase(grille, casesD, l, c, add, listeToDecouvre):  # Fonction qui pe
         for j in range(c - 1, c + 2):
             if i >= 0 and i < len(grille) and j >= 0 and j < len(grille[l]):
                 add.append([i, j])
-                if compteMinesVoisines(grille, i, j) == 0 and not grille[i][j]:
+                if MinesVoisines(grille, i, j) == 0 and not grille[i][j]:
                     if not casesD[i][j]:
                         listeToDecouvre.append([i, j])
                 casesD[i][j] = True
@@ -154,7 +156,7 @@ def decouvreCoter(grille, casesD, l,
             if ligne == l and case == c:
                 decouvreCase(grille, casesD, ligne, case, add, listeToDecouvre)
                 listeToDecouvre.remove([ligne, case])
-            elif casesD[ligne][case] and grille[ligne][case] == 0 and compteMinesVoisines(grille, ligne, case) == 0:
+            elif casesD[ligne][case] and grille[ligne][case] == 0 and MinesVoisines(grille, ligne, case) == 0:
                 decouvreCase(grille, casesD, ligne, case, add, listeToDecouvre)
                 listeToDecouvre.remove([ligne, case])
     for i in add:
@@ -203,7 +205,7 @@ def jouer_jeux():  # fonction pour choisir si on veut jouer ou quitter et choisi
         exit()
 
 
-jouer_jeux()
+"""jouer_jeux()
 grille = creerGrille(N, M)  # Appele de la fonction pour créer la grille
 drapeau = creerGrille(N, M)
 
@@ -215,7 +217,7 @@ afficheJeu(grille, casesD, drapeau)
 l, c = getCoords(casesD, N, M)
 casesD[l][c] = True
 placerMines(grille, N, M, X, l, c)
-if compteMinesVoisines(grille, l, c) == 0:
+if MinesVoisines(grille, l, c) == 0:
     decouvreCoter(grille, casesD, l, c)
 
 perdu = False
@@ -233,7 +235,7 @@ while not gagne and not perdu:
         casesD[l][c] = True
         if testMine(grille, l, c):
             perdu = True
-        if compteMinesVoisines(grille, l, c) == 0 and not perdu:
+        if MinesVoisines(grille, l, c) == 0 and not perdu:
             decouvreCoter(grille, casesD, l, c)
         gagne = victoire(grille, casesD, N, M)
     elif drap == '1':
@@ -256,4 +258,5 @@ else:
     print('\nLa solution était :')
     afficheSolution(grille)
 
-jouer_jeux()
+jouer_jeux()"""
+interface.creeGui(jouer_jeux)
